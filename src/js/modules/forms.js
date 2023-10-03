@@ -1,4 +1,6 @@
-const forms = () => {
+import { postData } from "../services/requests";
+
+const forms = (state) => {
   const form = document.querySelectorAll("form"),
     inputs = document.querySelectorAll("input"),
     selects = document.querySelectorAll("select"),
@@ -17,15 +19,6 @@ const forms = () => {
   const path = {
     designer: "assets/server.php",
     question: "assets/question.php",
-  };
-
-  const postData = async (url, data) => {
-    let res = await fetch(url, {
-      method: "POST",
-      body: data,
-    });
-
-    return await res.text();
   };
 
   const clearInputs = () => {
@@ -82,6 +75,15 @@ const forms = () => {
         : (api = path.question);
       console.log(api);
 
+      const price = document.querySelector('.calc-price').textContent;
+      if (!isNaN(+price)) {
+        formData.append('price', price);
+      }
+
+      for (let key of formData.entries()) {
+          console.log(key); 
+      }
+
       postData(api, formData)
         .then((res) => {
           console.log(res);
@@ -104,6 +106,7 @@ const forms = () => {
             item.classList.remove("fadeOutUp");
             item.classList.add("fadeInUp");
           }, 5000);
+          document.querySelector(".calc-price").textContent = "Для расчета нужно выбрать размер картины и материал картины";
         });
     });
   });
